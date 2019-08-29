@@ -1,0 +1,174 @@
+body {
+    font-family: cursive;
+    overflow: hidden;
+}
+
+.bg {
+    z-index: -1;
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    bottom: -10px;
+    left: -10px;
+    background-image: url('http://cloud.hunger-valley.com/music/public_tuijian_spring.jpg-big');
+    background-size: cover;
+    filter: blur(4px); /* 加模糊效果的滤镜 */
+}
+
+/* 给背景图加灰暗效果 */
+.bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, .3)
+}
+
+section {
+    height: 100%;
+}
+
+section>main {
+    width: 750px;
+    height: calc(100% - 25vh);
+    padding-top: 12vh;
+    margin: auto;
+}
+
+section>main>.aside {
+    float: left;
+}
+section>main>.aside>figure {
+    width: 45vh;
+    height: 45vh;
+    background-size: cover;
+    background-image: url('http://cloud.hunger-valley.com/music/public_tuijian_spring.jpg-big');
+}
+section>main>.aside>.btn {
+    margin-top: 4vh;
+    display: flex;
+}
+section>main>.aside>.btn>span {
+    flex: 1;
+    font-size: 6vh;
+    color: rgba(255, 255, 255, .5);
+    cursor: pointer;
+    text-align: center;
+}
+section>main>.aside>.btn>span:hover {
+    color: #fff;
+}
+
+
+section>main>.detail {
+    color: #fff;
+    margin-left: 8vh;
+    float: left;
+}
+section>main>.detail>.songname {
+    font-size: 7vh;
+    margin: 2vh 0 8vh 0
+}
+section>main>.detail>.songdata {
+    display: flex;
+}
+section>main>.detail>.songdata li {
+    flex: 1;
+    text-align: left;
+    margin-right: 8vh;
+}
+section>main>.detail>.songdata span {   
+    font-size: 3vh;
+}
+section>main>.detail>.bar-area {
+    align-items: center;
+    display: flex;
+    margin: 3vh 0 0 0;
+}
+section>main>.detail>.bar-area>.bar {
+    position: relative;
+    flex: 1;
+    background-color: rgba(255, 255, 255, .5);
+    border-radius: .2vh;
+    height: .8vh;
+}
+section>main>.detail>.bar-area>.bar>.bar-progress {
+    position: absolute;
+    width: 10%;
+    background-color: #fff;
+    border-radius: .2vh;
+    height: .8vh;
+}
+section>main>.detail>.bar-area>.current-time {
+    margin-left: 1vh;
+    font-size: 2.5vh;
+}
+
+section>main>.detail>.author {
+    color: rgba(255, 255, 255, .5);
+    margin: 2vh 0 2vh 0;
+    font-size: 2.8vh;
+}
+section>main>.detail>.lyric {
+    font-size: 4vh;
+}
+
+section>footer {
+    height: 25vh;
+    background-color: rgba(255, 255, 255, .2)
+}
+section>footer:hover >.layout>.iconfont {
+    opacity: 1;
+    transition: all .5s;
+}
+section>footer>.layout {
+    margin: auto;
+    position: relative;
+    width: 750px;
+}
+section>footer>.layout>.iconfont  {
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+    font-size: 6vh;
+    color: rgba(255, 255, 255, .5);
+    transition: all .5s;
+}
+section>footer>.layout>.icon-backward  {
+    left: -8vh;;
+}
+section>footer>.layout>.icon-forward  {
+    right: -8vh;;
+}
+
+section>footer>.layout>.iconfont:hover {
+    color: #fff;
+}
+section>footer>.layout>.box {
+    vertical-align: center;
+    overflow: hidden;
+}
+section>footer>.layout>.box>li {
+    float: left;   
+    margin: 2vh;
+}
+section>footer>.layout>.box>li:hover {
+    box-shadow: 0 0 .5vh .5vh rgba(255, 255, 255, .8);
+}
+
+section>footer>.layout>.box>li>figure {
+    height: 18vh;
+    width: 22vh;
+    background-image: url(http://cloud.hunger-valley.com/17-10-24/1906806.jpg-small);
+    background-size: cover;
+    background-position: center center;
+}
+section>footer>.layout>.box>li>.album-name {
+    text-align: center;
+    color: rgba(255, 255, 255, .5);
+}
+
+
