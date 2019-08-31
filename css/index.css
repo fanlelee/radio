@@ -136,6 +136,7 @@ section>footer>.layout>.iconfont  {
     font-size: 6vh;
     color: rgba(255, 255, 255, .5);
     transition: all .5s;
+    cursor: pointer;
 }
 section>footer>.layout>.icon-backward  {
     left: -8vh;;
@@ -147,26 +148,28 @@ section>footer>.layout>.icon-forward  {
 section>footer>.layout>.iconfont:hover {
     color: #fff;
 }
-section>footer>.layout>.box {
-    vertical-align: center;
+section>footer>.layout>.album-list {
+    position: relative;
     overflow: hidden;
+    height: 25vh;
 }
-section>footer>.layout>.box>li {
-    float: left;   
-    margin: 2vh;
+section>footer>.layout .box {
+    position: absolute;
 }
-section>footer>.layout>.box>li:hover {
+section>footer>.layout .box>li {
+    float: left;  
+    cursor: pointer;
+}
+section>footer>.layout .box>li:hover {
     box-shadow: 0 0 .5vh .5vh rgba(255, 255, 255, .8);
 }
 
-section>footer>.layout>.box>li>figure {
+section>footer>.layout .box>li>figure {
     height: 18vh;
-    width: 22vh;
-    background-image: url(http://cloud.hunger-valley.com/17-10-24/1906806.jpg-small);
     background-size: cover;
     background-position: center center;
 }
-section>footer>.layout>.box>li>.album-name {
+section>footer>.layout .box>li>.album-name {
     text-align: center;
     color: rgba(255, 255, 255, .5);
 }
