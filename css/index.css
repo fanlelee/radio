@@ -2,6 +2,31 @@ body {
     font-family: cursive;
     overflow: hidden;
 }
+.layout {
+    margin: 0 auto;
+    width: 800px;
+}
+
+/* @media (min-width: 700px){
+    .layout {
+        width: 600px;
+    }
+}
+@media (min-width: 900px){
+    .layout {
+        width: 800px;
+    }
+}
+@media (min-width: 1000px){
+    .layout {
+        width: 900px;
+    }
+}
+@media (min-width: 1200px) {
+    .layout {
+      width: 1100px;
+    }
+} */
 
 .bg {
     z-index: -1;
@@ -31,7 +56,6 @@ section {
 }
 
 section>main {
-    width: 750px;
     height: calc(100% - 25vh);
     padding-top: 12vh;
     margin: auto;
@@ -64,7 +88,7 @@ section>main>.aside>.btn>span:hover {
 
 section>main>.detail {
     color: #fff;
-    margin-left: 8vh;
+    margin-left: 3vh;
     float: left;
 }
 section>main>.detail>.songname {
@@ -112,7 +136,7 @@ section>main>.detail>.author {
     margin: 2vh 0 2vh 0;
     font-size: 2.8vh;
 }
-section>main>.detail>.lyric {
+section>main>.detail>.lyric>p {
     font-size: 4vh;
 }
 
@@ -127,7 +151,7 @@ section>footer:hover >.layout>.iconfont {
 section>footer>.layout {
     margin: auto;
     position: relative;
-    width: 750px;
+    width: 800px;
 }
 section>footer>.layout>.iconfont  {
     opacity: 0;
@@ -161,7 +185,7 @@ section>footer>.layout .box>li {
     float: left;  
     cursor: pointer;
 }
-section>footer>.layout .box>li:hover {
+section>footer>.layout .box>.li-hover {
     box-shadow: 0 0 .5vh .5vh rgba(255, 255, 255, .8);
 }
 

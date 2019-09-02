@@ -17,7 +17,7 @@ var Fm = {
         this.$songName = $('.page-music .detail>.songname')
         this.$author = $('.page-music .detail>.author')
         this.$currentTime = $('.page-music .detail .current-time')
-        this.$lyric = $('.page-music .detail .lyric')
+        this.$lyric = $('.page-music .detail .lyric p')
         this.$progress = $('.page-music .bar-progress')
         this.$bg = $('.bg')
         this.audio = new Audio()
@@ -53,6 +53,7 @@ var Fm = {
         })
 
         _this.audio.addEventListener('playing', function(){
+            _this.$playBtn.removeClass('icon-pause').addClass('icon-play')
             _this.clear = setInterval(function(){ 
                 _this.updateTime()
                 _this.updateProgress()
@@ -77,7 +78,10 @@ var Fm = {
         _this.$author.text(song.artist)
         _this.$bg.css('background-image','url('+song.picture+')')
         _this.audio.src = song.url
+
+        // if(!_this.albumData.firstLoad){
         _this.$playBtn.removeClass('icon-pause').addClass('icon-play')
+        
     },
 
     updateTime: function(){
@@ -91,6 +95,7 @@ var Fm = {
         var thisTime = _this.lyricObj['0'+minutes+':'+seconds]
         if(thisTime){
             _this.$lyric.text(_this.lyricObj['0'+minutes+':'+seconds])
+            // _this.$lyric.text(_this.lyricObj['0'+minutes+':'+seconds]).boomText('fadeIn')
         }
     },
     updateProgress: function(){
@@ -150,6 +155,12 @@ var Footer = {
                 _this.render(item)
             })
             _this.setStyle()
+            // _this.$box.find('li').eq(2).addClass('li-hover')
+            // EventCenter.fire('albumSelected', {
+            //     'channel_id': datas[2].channel_id,
+            //     'channel_name': datas[2].channel_name,
+            //     'firstLoad': true
+            // })            
         })
 
         _this.$right.on('click', function(){
@@ -158,8 +169,6 @@ var Footer = {
 
             var rowCount = Math.floor(_this.$albumList.width()/_this.liWidth)
             _this.isAnimate = true
-            console.log(_this.liWidth)
-            console.log(rowCount)
             _this.$box.animate({
                 'left': '-='+rowCount*parseInt(_this.liWidth)
             }, 500, function(){
@@ -178,8 +187,6 @@ var Footer = {
 
             var rowCount = Math.floor(_this.$albumList.width()/_this.liWidth)  
             _this.isAnimate = true
-            console.log(_this.liWidth)
-            console.log(rowCount)
             _this.$box.animate({
                 'left': '+='+rowCount*parseInt(_this.liWidth)
             }, 500, function(){
@@ -192,9 +199,14 @@ var Footer = {
         })
 
         _this.$box.on('click', 'li', function(){
+
+            _this.$box.find('.li-hover').removeClass('li-hover')
+            $(this).addClass('li-hover')
+
             EventCenter.fire('albumSelected', {
                 'channel_id': $(this).find('.album-cover').attr('channel_id'),
-                'channel_name': $(this).find('.album-cover').attr('channel_name')
+                'channel_name': $(this).find('.album-cover').attr('channel_name'),
+                // 'firstLoad': false
             })
         })
     },
@@ -253,3 +265,29 @@ App.init()
 // })
 
 
+
+// 插件 
+// 使用 $('p').boomText('fadeIn')
+$.fn.boomText = function(type){
+    type = type||'rollIn'
+    this.html(function(){
+        var arr = $(this).
+        text()
+        .split('')
+        .map(function(word){
+            '<span style="display:inline-block">'+word+'</span>'
+        })
+        
+        return arr.join('')
+    })
+
+    var $boomTexts = $(this).find('span')
+    var index = 0
+    var clock = setInterval(function(){
+        $boomTexts.eq(index).addClass('animate'+type)
+        index++
+        if(index >= $boomTexts.length){
+            clearInterval(clock)
+        }
+    }, 300)
+}
