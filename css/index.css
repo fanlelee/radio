@@ -96,10 +96,11 @@ section>main>.detail>.bar-area>.bar {
 }
 section>main>.detail>.bar-area>.bar>.bar-progress {
     position: absolute;
-    width: 10%;
+    width: 0%;
     background-color: #fff;
     border-radius: .2vh;
     height: .8vh;
+    transition: width .5s
 }
 section>main>.detail>.bar-area>.current-time {
     margin-left: 1vh;

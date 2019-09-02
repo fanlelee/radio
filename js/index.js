@@ -4,8 +4,126 @@ var EventCenter = {
     },
     fire: function(type, data){
         $(document).trigger(type, data)
-        console.log(data)
     }
+}
+
+var Fm = {
+    init: function(){
+        this.albumData
+        this.$cover = $('.page-music .aside>figure')
+        this.$playBtn = $('.page-music .aside .play-btn')
+        this.$next = $('.page-music .aside .next-btn')
+        this.$albumName = $('.page-music .detail>.album')
+        this.$songName = $('.page-music .detail>.songname')
+        this.$author = $('.page-music .detail>.author')
+        this.$currentTime = $('.page-music .detail .current-time')
+        this.$lyric = $('.page-music .detail .lyric')
+        this.$progress = $('.page-music .bar-progress')
+        this.$bg = $('.bg')
+        this.audio = new Audio()
+        this.audio.autoplay = true
+        this.clear
+        this.lyricObj = []
+
+        this.bind()
+    },
+    bind: function(){
+        var _this = this
+        EventCenter.on('albumSelected', function(e, data){
+            _this.albumData = data
+            _this.loadMusic()
+        })
+        
+
+        _this.$playBtn.on('click', function(){
+            if($(this).hasClass('icon-play')){
+                $(this).removeClass('icon-play').addClass('icon-pause')
+                _this.audio.pause()
+                clearInterval(_this.clear)
+            }else{
+                $(this).removeClass('icon-pause').addClass('icon-play')
+                _this.audio.play()
+            }
+        })
+        
+        _this.$next.on('click', function(){
+            _this.loadMusic()
+            _this.$playBtn.removeClass('icon-pause').addClass('icon-play')
+            clearInterval(_this.clear)
+        })
+
+        _this.audio.addEventListener('playing', function(){
+            _this.clear = setInterval(function(){ 
+                _this.updateTime()
+                _this.updateProgress()
+            },1000)
+        })
+
+    },
+    loadMusic: function(){
+        var _this = this
+        $.getJSON('//jirenguapi.applinzi.com/fm/getSong.php',{
+            channel: _this.albumData.channel_id
+        }).done(function(ret){
+            _this.setMusic(ret['song'][0])
+            _this.loadLyric(ret['song'][0]['sid'])
+        })
+    },
+    setMusic: function(song){
+        var _this = this
+        _this.$cover.css('background-image','url('+song.picture+')')
+        _this.$albumName.text(_this.albumData.channel_name)
+        _this.$songName.text(song.title)
+        _this.$author.text(song.artist)
+        _this.$bg.css('background-image','url('+song.picture+')')
+        _this.audio.src = song.url
+        _this.$playBtn.removeClass('icon-pause').addClass('icon-play')
+    },
+
+    updateTime: function(){
+        var _this = this  
+        var minutes = Math.floor(Math.floor(_this.audio.currentTime)/60)
+        var seconds = Math.floor(_this.audio.currentTime)%60
+        seconds = seconds<10? '0'+seconds : seconds
+        _this.$currentTime.text(minutes+":"+seconds)
+
+        // console.log(_this.lyricObj)
+        var thisTime = _this.lyricObj['0'+minutes+':'+seconds]
+        if(thisTime){
+            _this.$lyric.text(_this.lyricObj['0'+minutes+':'+seconds])
+        }
+    },
+    updateProgress: function(){
+        var _this = this  
+        var percent = _this.audio.currentTime/_this.audio.duration*100+'%'
+        this.$progress.css('width', percent)
+    },
+
+    loadLyric: function(sid){
+        var _this = this
+        $.getJSON('https://jirenguapi.applinzi.com/fm/getLyric.php', {
+            sid: sid
+        }).done(function(ret){
+            var lyricObj = []
+            var lyricArr = ret.lyric.split(/\n/g)
+            lyricArr.forEach(function(line){
+                var timeArr = line.match(/\d{2}:\d{2}/g)
+                var lyricStr = line.replace(/\[.+?\]/g,'')
+                if(Array.isArray(timeArr)){
+                    timeArr.forEach(function(time){
+                        _this.lyricObj[time] = lyricStr
+                    })
+                }
+            })
+        }).fail(function(ret){
+            _this.$lyric.text('音乐来自百度FM')
+        })
+    },
+
+    setLyric: function(){
+
+    }
+
 }
 
 var Footer = {
@@ -74,9 +192,9 @@ var Footer = {
         })
 
         _this.$box.on('click', 'li', function(){
-            console.log(this)
             EventCenter.fire('albumSelected', {
-                'channel_id': $(this).find('.album-cover').attr('channel_id')
+                'channel_id': $(this).find('.album-cover').attr('channel_id'),
+                'channel_name': $(this).find('.album-cover').attr('channel_name')
             })
         })
     },
@@ -107,6 +225,7 @@ var Footer = {
             'width': _this.albumCoverWidth
         })
         $node.find('.album-cover').attr('channel_id', data.channel_id)
+        $node.find('.album-cover').attr('channel_name', data.name)
         $node.find('.album-name').text(data.name)
         _this.$box.append($node)
     },
@@ -119,15 +238,18 @@ var Footer = {
 
 var App = {
     init: function(){
-
+        Footer.init()
+        Fm.init()
     },
     bind: function(){
 
     }
 }
 
-Footer.init()
+App.init()
 
-$(window).on('resize',function(){
-    window.location.reload()
-})
+// $(window).on('resize',function(){
+//     window.location.reload()
+// })
+
+
