@@ -209,4 +209,7 @@ section>footer>.layout .box>li>.album-name {
     color: rgba(255, 255, 255, .5);
 }
 
-
+.boomText{
+    opacity: 0;
+    display: inline-block;
+  }

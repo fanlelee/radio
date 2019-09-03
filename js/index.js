@@ -65,6 +65,13 @@ var Fm = {
             },1000)
         })
 
+        _this.audio.addEventListener('ended', function(){
+            clearInterval(_this.clear)
+            _this.albumData.firstLoad = false
+            _this.$playBtn.removeClass('icon-pause').addClass('icon-play')
+            _this.loadMusic()
+          })
+
     },
     loadMusic: function(){
         var _this = this
@@ -107,8 +114,7 @@ var Fm = {
         // console.log(_this.lyricObj)
         var thisTime = _this.lyricObj['0'+minutes+':'+seconds]
         if(thisTime){
-            _this.$lyric.text(_this.lyricObj['0'+minutes+':'+seconds])
-            // _this.$lyric.text(_this.lyricObj['0'+minutes+':'+seconds]).boomText('fadeIn')
+            _this.$lyric.text(_this.lyricObj['0'+minutes+':'+seconds]).boomText()
         }
     },
     updateProgress: function(){
@@ -128,10 +134,12 @@ var Fm = {
                 var timeArr = line.match(/\d{2}:\d{2}/g)
                 var lyricStr = line.replace(/\[.+?\]/g,'')
                 if(Array.isArray(timeArr)){
-                    timeArr.forEach(function(time){
+                    timeArr.forEach(function(time){                       
                         _this.lyricObj[time] = lyricStr
                     })
+                    _this.lyricObj['00:00'] = _this.lyricObj['00:00'].replace(', by 饥人谷', '')
                 }
+
             })
         }).fail(function(ret){
             _this.lyricObj = []
@@ -171,7 +179,6 @@ var Footer = {
             })
             _this.setStyle()
 
-            console.log(_this.$box.find('li').eq(0)[0])
             _this.$box.find('li').eq(0).addClass('li-hover')
             EventCenter.fire('albumSelected', {
                 'channel_id': _this.$box.find('li').eq(0).find('.album-cover').attr('channel_id'),
@@ -287,25 +294,22 @@ App.init()
 // 插件 
 // 使用 $('p').boomText('fadeIn')
 $.fn.boomText = function(type){
-    type = type||'rollIn'
+    type = type || 'rollIn'
     this.html(function(){
-        var arr = $(this).
-        text()
-        .split('')
-        .map(function(word){
-            '<span style="display:inline-block">'+word+'</span>'
-        })
-        
-        return arr.join('')
+      var arr = $(this).text()
+      .split('').map(function(word){
+          return '<span class="boomText">'+ word + '</span>'
+      })
+      return arr.join('')
     })
-
-    var $boomTexts = $(this).find('span')
+    
     var index = 0
+    var $boomTexts = $(this).find('span')
     var clock = setInterval(function(){
-        $boomTexts.eq(index).addClass('animate'+type)
-        index++
-        if(index >= $boomTexts.length){
-            clearInterval(clock)
-        }
+      $boomTexts.eq(index).addClass('animated ' + type)
+      index++
+      if(index >= $boomTexts.length){
+        clearInterval(clock)
+      }
     }, 300)
-}
+  }
