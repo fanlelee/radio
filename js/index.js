@@ -10,6 +10,7 @@ var EventCenter = {
 var Fm = {
     init: function(){
         this.albumData
+        this.song
         this.$cover = $('.page-music .aside>figure')
         this.$playBtn = $('.page-music .aside .play-btn')
         this.$next = $('.page-music .aside .next-btn')
@@ -42,14 +43,18 @@ var Fm = {
                 clearInterval(_this.clear)
             }else{
                 $(this).removeClass('icon-pause').addClass('icon-play')
+                if(_this.albumData.firstLoad){
+                    _this.audio.src = _this.song.url
+                }
                 _this.audio.play()
             }
         })
         
         _this.$next.on('click', function(){
-            _this.loadMusic()
-            _this.$playBtn.removeClass('icon-pause').addClass('icon-play')
             clearInterval(_this.clear)
+            _this.albumData.firstLoad = false
+            _this.$playBtn.removeClass('icon-pause').addClass('icon-play')
+            _this.loadMusic()
         })
 
         _this.audio.addEventListener('playing', function(){
@@ -66,8 +71,13 @@ var Fm = {
         $.getJSON('//jirenguapi.applinzi.com/fm/getSong.php',{
             channel: _this.albumData.channel_id
         }).done(function(ret){
-            _this.setMusic(ret['song'][0])
-            _this.loadLyric(ret['song'][0]['sid'])
+            if(ret['song'][0]['url']){
+                _this.song = ret['song'][0]
+                _this.setMusic(ret['song'][0])
+                _this.loadLyric(ret['song'][0]['sid'])
+            }else{
+                _this.loadMusic()
+            }
         })
     },
     setMusic: function(song){
@@ -77,10 +87,13 @@ var Fm = {
         _this.$songName.text(song.title)
         _this.$author.text(song.artist)
         _this.$bg.css('background-image','url('+song.picture+')')
-        _this.audio.src = song.url
+        if(!_this.albumData.firstLoad){
+            _this.audio.src = song.url
+            _this.$playBtn.removeClass('icon-pause').addClass('icon-play')
+        }else{
+            _this.$playBtn.removeClass('icon-play').addClass('icon-pause')
+        }
 
-        // if(!_this.albumData.firstLoad){
-        _this.$playBtn.removeClass('icon-pause').addClass('icon-play')
         
     },
 
@@ -109,7 +122,7 @@ var Fm = {
         $.getJSON('https://jirenguapi.applinzi.com/fm/getLyric.php', {
             sid: sid
         }).done(function(ret){
-            var lyricObj = []
+            _this.lyricObj = []
             var lyricArr = ret.lyric.split(/\n/g)
             lyricArr.forEach(function(line){
                 var timeArr = line.match(/\d{2}:\d{2}/g)
@@ -121,6 +134,7 @@ var Fm = {
                 }
             })
         }).fail(function(ret){
+            _this.lyricObj = []
             _this.$lyric.text('音乐来自百度FM')
         })
     },
@@ -151,16 +165,20 @@ var Footer = {
         var _this = this
         _this.getData(function(datas){
             _this.datalength = datas.length
-            datas.forEach(function(item){
+            var lists = datas.reverse()
+            lists.forEach(function(item){
                 _this.render(item)
             })
             _this.setStyle()
-            // _this.$box.find('li').eq(2).addClass('li-hover')
-            // EventCenter.fire('albumSelected', {
-            //     'channel_id': datas[2].channel_id,
-            //     'channel_name': datas[2].channel_name,
-            //     'firstLoad': true
-            // })            
+
+            console.log(_this.$box.find('li').eq(0)[0])
+            _this.$box.find('li').eq(0).addClass('li-hover')
+            EventCenter.fire('albumSelected', {
+                'channel_id': _this.$box.find('li').eq(0).find('.album-cover').attr('channel_id'),
+                'channel_name': _this.$box.find('li').eq(0).find('.album-cover').attr('channel_name'),
+                'firstLoad': true
+            })
+
         })
 
         _this.$right.on('click', function(){
@@ -206,7 +224,7 @@ var Footer = {
             EventCenter.fire('albumSelected', {
                 'channel_id': $(this).find('.album-cover').attr('channel_id'),
                 'channel_name': $(this).find('.album-cover').attr('channel_name'),
-                // 'firstLoad': false
+                'firstLoad': false
             })
         })
     },

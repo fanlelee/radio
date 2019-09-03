@@ -2,10 +2,10 @@ body {
     font-family: cursive;
     overflow: hidden;
 }
-.layout {
+/* .layout {
     margin: 0 auto;
     width: 800px;
-}
+} */
 
 /* @media (min-width: 700px){
     .layout {
@@ -16,17 +16,22 @@ body {
     .layout {
         width: 800px;
     }
-}
-@media (min-width: 1000px){
+}*/
+@media (min-width: 700px) {
     .layout {
-        width: 900px;
+        width: 650px;
     }
 }
-@media (min-width: 1200px) {
+@media (min-width: 800px){
     .layout {
-      width: 1100px;
+        width: 700px;
     }
-} */
+} 
+@media (min-width: 1000px) {
+    .layout {
+      width: 900px;
+    }
+}
 
 .bg {
     z-index: -1;
@@ -35,7 +40,7 @@ body {
     right: -10px;
     bottom: -10px;
     left: -10px;
-    background-image: url('http://cloud.hunger-valley.com/music/public_tuijian_spring.jpg-big');
+    /* background-image: url('http://cloud.hunger-valley.com/music/public_tuijian_spring.jpg-big'); */
     background-size: cover;
     filter: blur(4px); /* 加模糊效果的滤镜 */
 }
@@ -59,16 +64,18 @@ section>main {
     height: calc(100% - 25vh);
     padding-top: 12vh;
     margin: auto;
+    display: flex;
 }
 
 section>main>.aside {
-    float: left;
+    flex: 1;
 }
 section>main>.aside>figure {
     width: 45vh;
     height: 45vh;
+    margin: auto;
     background-size: cover;
-    background-image: url('http://cloud.hunger-valley.com/music/public_tuijian_spring.jpg-big');
+    /* background-image: url('http://cloud.hunger-valley.com/music/public_tuijian_spring.jpg-big'); */
 }
 section>main>.aside>.btn {
     margin-top: 4vh;
@@ -89,11 +96,13 @@ section>main>.aside>.btn>span:hover {
 section>main>.detail {
     color: #fff;
     margin-left: 3vh;
-    float: left;
+    flex: 1;
 }
 section>main>.detail>.songname {
     font-size: 7vh;
-    margin: 2vh 0 8vh 0
+    margin: 2vh 0 8vh 0;
+    max-height: 20vh;
+    overflow: hidden;
 }
 section>main>.detail>.songdata {
     display: flex;
@@ -135,6 +144,8 @@ section>main>.detail>.author {
     color: rgba(255, 255, 255, .5);
     margin: 2vh 0 2vh 0;
     font-size: 2.8vh;
+    max-height: 4vh;
+    overflow: hidden;
 }
 section>main>.detail>.lyric>p {
     font-size: 4vh;
@@ -151,7 +162,6 @@ section>footer:hover >.layout>.iconfont {
 section>footer>.layout {
     margin: auto;
     position: relative;
-    width: 800px;
 }
 section>footer>.layout>.iconfont  {
     opacity: 0;
